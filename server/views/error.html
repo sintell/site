@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block title %}a.{{ status }}{% endblock %}
+
+{% block content %}
+    <p class="error">{{ msg }}</p>
+    <p class="block block_center">
+        <a href="/" class="link">Get Back!</a>
+    </p>
+{% endblock %}

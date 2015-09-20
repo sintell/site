@@ -1,3 +1,4 @@
+/* jshint browser:true */
 /* jshint node:true */
 /* jshint esnext:true */
 

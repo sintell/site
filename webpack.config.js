@@ -2,6 +2,8 @@
 /* jshint esnext:true */
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var LiveReloadPlugin = require('webpack-livereload-plugin');
+var webpack = require('webpack');
 
 module.exports = {
     // must be 'source-map' or 'inline-source-map'
@@ -16,7 +18,6 @@ module.exports = {
             {
                 test: /\.less$/,
                 loader: ExtractTextPlugin.extract(
-                    // activate source maps via loader query
                     'css?sourceMap!' +
                     'less?sourceMap'
                 )
@@ -24,7 +25,12 @@ module.exports = {
         ]
     },
     plugins: [
-        // extract inline css into separate 'styles.css'
-        new ExtractTextPlugin('styles.css')
+        new ExtractTextPlugin('styles.css'),
+        new webpack.optimize.UglifyJsPlugin({
+            mangle: {
+                except: ['$super', '$', 'exports', 'require']
+            }
+        }),
+        new LiveReloadPlugin()
     ]
 };
