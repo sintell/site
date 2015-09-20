@@ -1,0 +1,29 @@
+{
+  "name": "aaleks.ru",
+  "version": "1.0.0",
+  "description": "personal homepage",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sintell/site.git"
+  },
+  "author": "sintell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sintell/site/issues"
+  },
+  "homepage": "https://github.com/sintell/site#readme",
+  "devDependencies": {
+    "extract-text-webpack-plugin": "^0.8.2",
+    "less": "^2.5.1",
+    "less-loader": "^2.2.1",
+    "style-loader": "^0.12.4",
+    "webpack": "^1.12.2"
+  },
+  "dependencies": {
+    "jquery": "^2.1.4"
+  }
+}
