@@ -1,11 +1,14 @@
+/* jshint node:true */
+/* jshint esnext:true */
+
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     // must be 'source-map' or 'inline-source-map'
-    entry: "./entry.js",
+    entry: './static/entry.js',
     output: {
-        path: __dirname,
-        filename: "bundle.js"
+        path: `${__dirname}/static/public`,
+        filename: 'bundle.js'
     },
     devtool: 'source-map',
     module: {

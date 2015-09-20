@@ -1,0 +1,29 @@
+{
+    "indent": 4,
+    "browser": true,
+    "curly": true,
+    "eqeqeq": true,
+    "immed": true,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "nonew": false,
+    "supernew": true,
+    "undef": true,
+    "strict": true,
+    "devel": true,
+    "unused": true,
+    "camelcase": true,
+    "bitwise": true,
+    "maxlen": 120,
+    "sub": true,
+    "globals": {
+        "jQuery": true,
+        "$": true,
+        "Backbone": true,
+        "_": true,
+        "requirejs": true,
+        "require": true,
+        "define": true
+    }
+}
