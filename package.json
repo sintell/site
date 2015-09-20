@@ -23,6 +23,7 @@
     "less-loader": "^2.2.1",
     "style-loader": "^0.12.4",
     "webpack": "^1.12.2",
+    "css-loader": "^0.18.0",
     "webpack-livereload-plugin": "^0.1.4"
   },
   "dependencies": {

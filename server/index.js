@@ -4,7 +4,6 @@
 
 var render = require('./lib/render');
 var route = require('koa-route');
-var serve = require('koa-static');
 var koaJsonLogger = require('koa-json-logger');
 
 // var parse = require('co-body');
@@ -43,6 +42,7 @@ app.use(function* (next) {
 });
 
 if (process.env.NODE_ENV === 'development') {
+    var serve = require('koa-static');
     app.use(serve(`${__dirname}/../static/public`, {maxage: 65356}));
 }
 
