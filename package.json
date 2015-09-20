@@ -27,6 +27,7 @@
   "dependencies": {
     "co-body": "^4.0.0",
     "co-views": "^2.1.0",
+    "forever-monitor": "^1.6.0",
     "jquery": "^2.1.4",
     "koa": "^1.0.0",
     "koa-json-logger": "^1.0.0",
