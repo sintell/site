@@ -9,7 +9,7 @@ module.exports = {
     // must be 'source-map' or 'inline-source-map'
     entry: './static/entry.js',
     output: {
-        path: `${__dirname}/static/public`,
+        path: `${__dirname}/static/public/i`,
         filename: 'bundle.js'
     },
     devtool: 'source-map',
