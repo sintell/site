@@ -6,7 +6,6 @@
 
     &_center {
         margin: 0 auto;
-        text-align: center;
     }
 }
 
@@ -16,5 +15,42 @@
     &:active,
     &:hover {
         color: #55e;
+    }
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.input-like {
+    padding: 15px;
+    border: 1px solid #555;
+    display: inline-block;
+    width: 200px;
+    box-shadow: inset 1px 1px 4px #aaa;
+    position: relative;
+
+    &:after {
+        display: inline-block;
+        content: "";
+        width: 1px;
+        height: 60%;
+        border-right: 1px solid;
+        position: absolute;
+
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 30px;
+        margin: auto;
+
+        -webkit-animation: pulse 1s ease-in infinite;
+        -o-animation: pulse 1s ease-in infinite;
+        animation: pulse 1s ease-in infinite;
     }
 }
