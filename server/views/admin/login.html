@@ -1,0 +1,26 @@
+{% extends "../layout.html" %}
+
+{% block title %}a.Login{% endblock %}
+
+{% block content %}
+    {% if flash.error %}
+    <span class="form-error">{{ flash.error }}</span>
+    {% endif %}
+    <form action="/login" method="POST" class="login-form">
+        <div class="login-form__fields">
+            <input type="text"
+                   class="form-input"
+                   placeholder="login"
+                   name="login"
+                   value="{{ flash.oldForm.login }}">
+            <input type="password"
+                   class="form-input"
+                   placeholder="password"
+                   name="password">
+            <input type="hidden" name="_csrf" value="{{ csrf }}">
+        </div>
+        <div class="login-form__buttons">
+            <input type="submit" class="form-button" value="login"></input>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "../layout.html" %}
+
+{% block title %}a.Dashboard{% endblock %}
+
+{% block content %}
+    <div class="dashboard">
+        <h1>\{a\}.Dashboard</h1>
+        <p>Logged in as {{ user.login }}</p>
+        {% if user %}
+            <form action="/logoff" method="POST">
+                <div class="login-form__buttons">
+                    <input type="submit" class="form-button" value="logout"></input>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
