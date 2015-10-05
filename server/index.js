@@ -19,6 +19,7 @@ var port = process.env.PORT || DEFAULT_PORT;
 
 var router = new Router();
 var secureRouter = new Router();
+var passport = require('./lib/auth');
 
 // "database"
 
@@ -49,6 +50,9 @@ if (process.env.NODE_ENV === 'development') {
     var serve = require('koa-static');
     app.use(serve(`${__dirname}/../static/public/`, {maxage: 65356}));
 }
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // errors middleware
 app.use(function*(next) {
@@ -132,6 +136,13 @@ function *authorize() {
         this.redirect(router.url('login'));
     }
 }
+
+// Configure /auth/github & /auth/github/callback
+router.get('/auth/github', passport.authenticate('github'));
+router.get(
+    '/auth/github/callback',
+    passport.authenticate('github', {successRedirect: '/', failureRedirect: '/'})
+);
 
 router.get('index', '/', index);
 router.get('login', '/login', login);
