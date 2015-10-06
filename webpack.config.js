@@ -7,10 +7,13 @@ var webpack = require('webpack');
 
 module.exports = {
     // must be 'source-map' or 'inline-source-map'
-    entry: './static/entry.js',
+    entry: {
+        app: './static/entry.js',
+        vendor: ['jquery', './static/js/vendor/highlight.pack.min.js']
+    },
     output: {
         path: `${__dirname}/static/public/i`,
-        filename: 'bundle.js'
+        filename: 'bundle.js',
     },
     devtool: 'source-map',
     module: {
@@ -26,11 +29,12 @@ module.exports = {
     },
     plugins: [
         new ExtractTextPlugin('styles.css'),
-        new webpack.optimize.UglifyJsPlugin({
-            mangle: {
-                except: ['$super', '$', 'exports', 'require']
-            }
-        }),
+        new webpack.optimize.CommonsChunkPlugin(/* chunkName= */'vendor', /* filename= */'vendor.bundle.js'),
+        // new webpack.optimize.UglifyJsPlugin({
+        //     mangle: {
+        //         except: ['$super', '$', 'exports', 'require']
+        //     }
+        // }),
         new LiveReloadPlugin()
     ]
 };
