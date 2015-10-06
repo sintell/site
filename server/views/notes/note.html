@@ -1,0 +1,34 @@
+{% extends "../layout.html" %}
+
+{% block title %}a.Notes{% endblock %}
+{% block content-title %}{{ note.title }}{% endblock %}
+
+{% block content %}
+    <div class="notes-wrapper">
+        <div class="notes-list App-Notes-List">
+            <div class="note note_fullpage">
+                <span class="note__text">{{ note.text|safe }}</span>
+            </div>
+        </div>
+        {% if user.hasAuth %}
+        <div class="notes-form App-Notes-Form">
+            <form action="/notes/{{ note.id }}/update" method="POST" class="form">
+                <h3 class="form__element form__element_title">Edit note</h3>
+                <input type="text"
+                       name="title"
+                       class="form__element form__element_input"
+                       placeholder="Note title"
+                       value="{{ note.title }}">
+                <textarea class="form__element form__element_textarea" name="text" id="" cols="30" rows="10">{{ note.raw }}</textarea>
+                <button class="form__element form__element_button" type="submit">update</button>
+                <input type="hidden" name="_csrf" value="{{ csrf }}">
+            </form>
+
+            <form action="/notes/{{ note.id }}/delete" class="form" method="POST">
+                <button class="form__element form__element_button" type="submit">remove</button>
+                <input type="hidden" name="_csrf" value="{{ csrf }}">
+            </form>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}

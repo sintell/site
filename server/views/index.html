@@ -4,10 +4,32 @@
 
 {% block content %}
 <div class="home">
-    <div class="header">
-        <span class="header__title">
-            <span class="input-like">a.aleks</span>
-        </span>
+    <div class="tiles App-Menu-Tiles">
+        <div class="tile App-Menu-Tile">
+            <a href="#blog" class="link link_stretched">
+                <div class="tile__text">Blog</div>
+            </a>
+        </div>
+        <div class="tile App-Menu-Tile">
+            <a href="/admin/dashboard" class="link link_stretched">
+                <div class="tile__text">
+                    <p>Dashboard</p>
+                    {% if user %}
+                    <p>Already logged in as {{ user.login }}</p>
+                    {% endif %}
+                </div>
+            </a>
+        </div>
+        <div class="tile App-Menu-Tile">
+            <a href="#music" class="link link_stretched">
+                <div class="tile__text">Music</div>
+            </a>
+        </div>
+        <div class="tile App-Menu-Tile">
+            <a href="/notes" class="link link_stretched">
+                <div class="tile__text">Notes</div>
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}

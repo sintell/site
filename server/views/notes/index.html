@@ -1,0 +1,35 @@
+{% extends "../layout.html" %}
+
+{% block title %}a.Notes{% endblock %}
+{% block content-title %}Latest notes{% endblock %}
+
+{% block content %}
+
+    <div class="notes-wrapper">
+        <div class="notes-list App-Notes-List">
+            {% if notes.length == 0 %}
+                No notes here! Come back later.
+            {% endif %}
+            {% for note in notes %}
+                <div class="note">
+                    <a href="/notes/{{ note.id }}"><span class="note__id">#{{ note.id }}</span></a>
+                    <h3 class="note__title">{{note.title}}</h3>
+                    <span class="note__text">{{ note.text|safe }}</span>
+                </div>
+            {% endfor %}
+
+            <a href="/notes/all"><span>All notes…</span></a>
+        </div>
+        {% if user.hasAuth %}
+        <div class="notes-form App-Notes-Form">
+            <form action="/notes" method="POST" class="form">
+                <h3 class="form__element form__element_title">Create new note</h3>
+                <input type="text" name="title" class="form__element form__element_input" placeholder="Note title">
+                <textarea class="form__element form__element_textarea" name="text" id="" cols="30" rows="10"></textarea>
+                <input type="hidden" name="_csrf" value="{{ csrf }}">
+                <button class="form__element form__element_button" type="submit">create</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}

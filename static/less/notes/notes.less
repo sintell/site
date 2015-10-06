@@ -1,0 +1,125 @@
+.notes-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.notes-list {
+    padding: 20px;
+    width: 70%;
+    box-sizing: border-box;
+    margin: 0 auto;
+
+    .slide-by-resize();
+
+    @media @breakpoint-s, @breakpoint-xs {
+        width: 100% !important;
+    }
+}
+
+.notes-form {
+    padding: 20px;
+    width: 30%;
+    box-sizing: border-box;
+
+    .slide-by-resize();
+
+    @media @breakpoint-s, @breakpoint-xs {
+        width: 100% !important;
+    }
+}
+
+    .note {
+        & + & {
+            margin-top: 15px;
+        }
+
+        &_fullpage {
+        }
+
+        background-color: #eee;
+        padding: 10px;
+
+        &__id {
+            color: #aaa;
+            position: absolute;
+            text-decoration: underline;
+
+            &:hover  {
+                color: #555;
+            }
+        }
+
+        &__title {
+            color: #555;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        &__text {
+            padding-left: 30px;
+            display: block;
+
+            // Styles for notes *.md blocks
+            //
+            & > p, h1, h2, h3, h4, h5, h6, table {
+                line-height: 1.5;
+                color: #333;
+            }
+
+            & > p {
+                margin: 5px 0;
+            }
+
+            & > blockquote {
+                border-left: 5px solid #ccc;
+                padding: 5px 0 5px 10px;
+                margin-left: 5px;
+                color: #555;
+            }
+
+            & > pre code {
+                box-shadow: none;
+            }
+
+            & > table, tr, td, th {
+                border: 1px solid #aaa;
+                padding: 10px;
+                margin: 15px;
+            }
+
+            & > ol, ul {
+                padding-left: 20px;
+                margin: 10px;
+            }
+
+            & > h1 {
+                font-size: 24px;
+                margin: 20px 0 5px;
+            }
+            & > h2 {
+                font-size: 20px;
+                margin: 20px 0 5px;
+            }
+            & > h3 {
+                font-size: 16px;
+                margin: 20px 0 5px;
+            }
+            & > h4 {
+                font-size: 16px;
+                margin: 20px 0 5px;
+                color: #444;
+            }
+            & > h5 {
+                font-size: 16px;
+                margin: 20px 0 5px;
+                color: #555;
+            }
+            & > h6 {
+                font-size: 16px;
+                margin: 20px 0 5px;
+                color: #666;
+            }
+
+        }
+    }

@@ -4,23 +4,23 @@
 
 {% block content %}
     {% if flash.error %}
-    <span class="form-error">{{ flash.error }}</span>
+    <span class="form__element form__element_error">{{ flash.error }}</span>
     {% endif %}
     <form action="/login" method="POST" class="login-form">
         <div class="login-form__fields">
             <input type="text"
-                   class="form-input"
+                   class="form__element form__element_input"
                    placeholder="login"
                    name="login"
                    value="{{ flash.oldForm.login }}">
             <input type="password"
-                   class="form-input"
+                   class="form__element form__element_input"
                    placeholder="password"
                    name="password">
             <input type="hidden" name="_csrf" value="{{ csrf }}">
         </div>
-        <div class="login-form__buttons">
-            <input type="submit" class="form-button" value="login"></input>
+        <div>
+            <input type="submit" class="form__element form__element_button" value="login"></input>
         </div>
     </form>
 {% endblock %}

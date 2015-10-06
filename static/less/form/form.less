@@ -1,9 +1,27 @@
 .form {
-
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #eee;
+    border: 1px solid #ccc;
 }
 
-.form-input {
+.form__element {
+    width: 100%;
     display: inline-block;
+
+    & + & {
+        margin-top: 10px;
+    }
+}
+
+.form__element_title {
+    font-size:18px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.form__element_textarea {
+    box-sizing: border-box;
     padding: 10px;
 
     outline: none;
@@ -12,23 +30,40 @@
 
     font-size: 14px;
 
-    width: 100%;
 
     &:focus {
         box-shadow: 0 0 2px rgba(100, 100, 100, 0.7);
     }
 }
 
-.form-button {
+.form__element_input {
+    padding: 10px;
+
+    outline: none;
+    border: 1px solid #999;
+    box-sizing: border-box;
+
+    font-size: 14px;
+
+
+    &:focus {
+        box-shadow: 0 0 2px rgba(100, 100, 100, 0.7);
+    }
+}
+
+.form__element_button {
     background-color: #fff;
     border: 1px solid #999;
     padding: 10px;
     box-sizing: border-box;
-    width: 100%;
 
     outline: none;
 
     font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    cursor: pointer;
+
 
     &:focus {
         box-shadow: 0 0 2px rgba(100, 100, 100, 0.7);
@@ -37,45 +72,25 @@
     &:active {
         box-shadow: inset 2px 2px 2px #aaa;
     }
+
+    .form__element:last-child& {
+        margin-top: 20px;
+    }
 }
 
-.form-error {
+.form__element_error {
     background-color: rgba(255, 153, 153, 0.8);
     position: absolute;
     top: -45px;
+    top: 0;
     left: 0;
     right: 0;
-     margin: auto;
+    margin: auto;
     padding: 10px;
     width: 1%;
     box-sizing: border-box;
     min-width: 100%;
     padding: 10px 20px;
     border: 1px solid #a77;
-}
-
-.login-form {
-    display: block;
-    width: 300px;
-    height: 140px;
-    background-color: #eee;
-    padding: 20px;
-
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    position: absolute;
-
-    border: 1px solid #777;
-
-    &__fields > .form-input {
-        margin-bottom: 5px;
-    }
-
-    &__buttons {
-        margin-top: 15px;
-        text-align: center;
-    }
+    text-align: center;
 }

@@ -39,10 +39,21 @@
 </head>
 <body>
     <div class="layout">
+        <div class="header">
+            <span class="header__title">
+                <span class="input-like">
+                    <a href="/"><span class="input-like__text input-like__text_separator">a.aleks</span></a><h1 class="input-like__text input-like__text_secondary input-like__text_unimportant">{% block content-title %}A site, a blog and something more{% endblock %}</h1>
+                </span>
+            </span>
+        </div>
+
         {% block content %}
             <p>Missing content!</p>
         {% endblock %}
+
     </div>
+    <div class="footer"><span class="footer__text">Made with <abbr title="love">♥</abbr> and <abbr title="tech">⚙</abbr></span></div>
+    <script src="/i/vendor.bundle.js"></script>
     <script src="/i/bundle.js"></script>
 </body>
 </html>
