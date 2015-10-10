@@ -1,5 +1,6 @@
 /*jshint node:true*/
 /*jshint esnext:true*/
+/*jshint noyield: true*/
 'use strict';
 
 const marked = require('marked');
@@ -19,12 +20,12 @@ function convertToHTML(text) {
     return marked(text);
 }
 
-function *newNote(o, title, text) {
+function *newNote(o, title, text, atMainPage) {
     /* jshint validthis:true */
     var result = yield o.pg.db.client.query_(
-            `INSERT INTO notes(text, raw, title)
-                VALUES($1, $2, $3)
-             RETURNING id, created_at, updated_at;`, [convertToHTML(text), text, title]
+            `INSERT INTO notes(text, raw, title, at_main_page)
+                VALUES($1, $2, $3, $4)
+             RETURNING id, created_at, updated_at;`, [convertToHTML(text), text, title, atMainPage]
         );
 
     return {
@@ -40,9 +41,9 @@ function *newNote(o, title, text) {
 function *getNote(o, id) {
     var result = yield o.pg.db.client.query_(
         `SELECT * FROM notes
-            WHERE id=$1 AND (deleted_at IS NULL OR deleted_at > to_timestamp($2))
+            WHERE id=$1 AND (deleted_at IS NULL OR deleted_at > now())
          LIMIT 1;`,
-        [id, +(new Date)]
+        [id]
     );
 
     return {
@@ -51,12 +52,12 @@ function *getNote(o, id) {
     };
 }
 
-function *setNote(o, id, title, text) {
+function *setNote(o, id, title, text, atMainPage) {
     var result = yield o.pg.db.client.query_(
         `UPDATE notes
-            SET title=$1, text=$2, raw=$3, updated_at=now()
-         WHERE id=$4`,
-        [title, convertToHTML(text), text, id]
+            SET title=$1, text=$2, raw=$3, at_main_page=$4, updated_at=now()
+         WHERE id=$5`,
+        [title, convertToHTML(text), text, atMainPage, id]
     );
 
     return {
@@ -79,10 +80,6 @@ function *deleteNote(o, id) {
 }
 
 var Notes = function(options) {
-
-    var parse = require('co-body');
-    var render = options.render;
-
     var router = options.router;
     var secureRouter = options.secureRouter;
 
@@ -90,17 +87,17 @@ var Notes = function(options) {
         /* jshint validthis:true */
         var notesData = yield this.pg.db.client.query_(
             `SELECT * FROM notes
-                WHERE deleted_at IS NULL OR deleted_at > to_timestamp('${+(new Date)}')
-             ORDER BY created_at DESC LIMIT 10;;`
+                WHERE deleted_at IS NULL OR deleted_at > now()
+             ORDER BY created_at DESC LIMIT 10;`
         );
-        this.body = yield render('notes/index', {notes: notesData.rows, user: this.session.user, csrf: this.csrf});
+        this.body = yield this.render('notes/index', {notes: notesData.rows});
     }
 
     function *note() {
         /* jshint validthis:true */
         var noteData = (yield getNote(this, this.params.id)).value;
         if (noteData) {
-            this.body = yield render('notes/note', {note: noteData, user: this.session.user, csrf: this.csrf});
+            this.body = yield this.render('notes/note', {note: noteData});
         } else {
             this.state = 404;
         }
@@ -108,19 +105,17 @@ var Notes = function(options) {
 
     function *createNote() {
         /* jshint validthis:true */
-        var body = yield parse(this);
-
+        var body = this.request.body;
         this.assertCSRF(body);
-        var note = (yield newNote(this, body.title, body.text)).value;
+        var note = (yield newNote(this, body.title, body.text, body.atMainPage || false)).value;
         this.redirect(secureRouter.url('note', {id: note.id}));
     }
 
     function *updateNote() {
         /* jshint validthis:true */
         var id = this.params.id;
-        var body = yield parse(this);
-
-        yield setNote(this, this.params.id, body.title, body.text);
+        var body = this.request.body;
+        yield setNote(this, this.params.id, body.title, body.text, body.atMainPage || false);
 
         this.redirect(secureRouter.url('note', {id}));
     }

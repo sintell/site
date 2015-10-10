@@ -24,17 +24,21 @@ module.exports = {
                     'css?sourceMap!' +
                     'less?sourceMap'
                 )
+            },
+            {
+                test: /\.(eot|woff|woff2|ttf|svg|png|jpg)/,
+                loader: 'url-loader?limit=30000&name=[name]-[hash].[ext]'
             }
         ]
     },
     plugins: [
         new ExtractTextPlugin('styles.css'),
         new webpack.optimize.CommonsChunkPlugin(/* chunkName= */'vendor', /* filename= */'vendor.bundle.js'),
-        // new webpack.optimize.UglifyJsPlugin({
-        //     mangle: {
-        //         except: ['$super', '$', 'exports', 'require']
-        //     }
-        // }),
+        new webpack.optimize.UglifyJsPlugin({
+            mangle: {
+                except: ['$super', '$', 'exports', 'require']
+            }
+        }),
         new LiveReloadPlugin()
     ]
 };

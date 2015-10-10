@@ -1,45 +1,46 @@
 /*jshint node:true*/
 /*jshint esnext:true*/
+/*jshint noyield: true*/
 'use strict';
 
-var render = require('./lib/render');
-var Router = require('koa-router');
-var koaJsonLogger = require('koa-json-logger');
-var session = require('koa-session');
-var flash = require('koa-flash');
-var koaPg = require('koa-pg');
-var parse = require('co-body');
-var koa = require('koa');
-var app = koa();
+const renderer = require('./lib/render');
+const Router = require('koa-router');
+const koaJsonLogger = require('koa-json-logger');
+const session = require('koa-session');
+const flash = require('koa-flash');
+const koaPg = require('koa-pg');
+const bodyParser = require('koa-bodyparser');
+const koa = require('koa');
+const app = koa();
 
-var csrf = require('koa-csrf');
+const csrf = require('koa-csrf');
 
 const DEFAULT_PORT = 8767;
-var port = process.env.PORT || DEFAULT_PORT;
+const port = process.env.PORT || DEFAULT_PORT;
 
-var router = new Router();
-var secureRouter = new Router();
-var passport = require('./lib/auth');
+const router = new Router();
+const secureRouter = new Router();
+const passport = require('./lib/auth');
 
-// "database"
+app.keys = [process.env.APP_KEYS || 'new keys lol'];
 
-// var posts = [];
+app.use(bodyParser({
+    onerror: function(err, ctx) {
+        ctx.throw('body parse error', 422);
+    }
+}));
 
-// middleware
-//
+// database
 app.use(koaPg('postgres://mmo:aSddoT@localhost:5432/mmo'));
-//
 
-// var korm = new Korm(app, {
-//     conn: 'postgres://site:aSddoT1(92@localhost:5432/site'
-// })
-
-app.keys = process.env.APP_KEYS || 'test,lol';
-app.keys = app.keys.split(',');
 app.use(session(app));
+app.use(passport.initialize());
+app.use(passport.session());
 csrf(app);
-// app.use(csrf.middleware);
+app.use(csrf.middleware);
 app.use(flash());
+
+app.use(renderer());
 
 app.use(koaJsonLogger({
     name: 'aaleks.ru',
@@ -51,24 +52,24 @@ if (process.env.NODE_ENV === 'development') {
     app.use(serve(`${__dirname}/../static/public/`, {maxage: 65356}));
 }
 
-app.use(passport.initialize());
-app.use(passport.session());
+/**
+ * Errors middleware
+ */
 
-// errors middleware
-app.use(function*(next) {
+app.use(function *errors500(next) {
     try {
         yield next;
     } catch (err) {
         this.status = err.status || 500;
-        this.body = yield render('error', {msg: err.message, status: this.status});
+        this.body = yield this.render('error', {msg: err.message, status: this.status});
         this.app.emit('error', err, this);
     }
 });
 
-app.use(function* (next) {
+app.use(function *errors400(next) {
     yield next;
     if (this.status >= 400 && this.status < 500) {
-        this.body = yield render('error', {requestedPath: this.request.path, status: this.status});
+        this.body = yield this.render('error', {requestedPath: this.request.path, status: this.status});
     }
 });
 
@@ -78,22 +79,29 @@ app.use(function* (next) {
 
 function *checkAuth(next) {
     /*jshint validthis:true */
-    if (this.session.user) {
+    if (this.req.isAuthenticated()) {
         yield next;
     } else {
         this.redirect(router.url('login'));
     }
 }
 
-
 /**
  * App routes
  */
+
 secureRouter.use(checkAuth);
 
 function *index() {
     /*jshint validthis:true */
-    this.body = yield render('index', {user: this.session.user, flash: this.flash});
+    var noteData = yield this.pg.db.client.query_(
+        `SELECT title, text FROM notes
+            WHERE at_main_page=true AND (deleted_at IS NULL OR deleted_at > now())
+         ORDER BY updated_at DESC
+         LIMIT 1;`
+    );
+
+    this.body = yield this.render('index', {note: noteData.rows[0]});
 }
 
 function *login() {
@@ -101,47 +109,36 @@ function *login() {
     if (this.session.user) {
         this.redirect(secureRouter.url('dashboard'));
     }
-
-    this.body = yield render('admin/login', {csrf: this.csrf, flash: this.flash});
+    this.body = yield this.render('admin/login');
 }
 
-function *logoff(next) {
+function *logoff() {
     /*jshint validthis:true */
-    this.session = null;
-    this.redirect(router.url('index'));
-    yield next;
-}
-
-function *dashboard() {
-    /*jshint validthis:true */
-    this.body = yield render('admin/dashboard', {user: this.session.user});
+    this.logout();
+    this.redirect('/');
 }
 
 function *authorize() {
     /*jshint validthis:true */
-    var body = yield parse(this);
-    console.log(body);
+    var body = this.request.body;
     this.assertCSRF(body);
 
-    if (body.login && body.password === 'password') {
-        this.session.user = {
-            login: body.login,
-            hasAuth: true
-        };
-        this.redirect(secureRouter.url('dashboard'));
-    } else {
-        delete body.password;
-        delete body._csrf;
-        this.flash = {error: 'Wrong username or password', oldForm: body};
-        this.redirect(router.url('login'));
-    }
+    yield passport.authenticate('local', {
+        successRedirect: secureRouter.url('dashboard'),
+        failureRedirect: router.url('login')
+    });
+}
+
+function *dashboard() {
+    /*jshint validthis:true */
+    this.body = yield this.render('admin/dashboard');
 }
 
 // Configure /auth/github & /auth/github/callback
 router.get('/auth/github', passport.authenticate('github'));
 router.get(
     '/auth/github/callback',
-    passport.authenticate('github', {successRedirect: '/', failureRedirect: '/'})
+    passport.authenticate('github', {successRedirect: '/', failureRedirect: '/', failureFlash: true})
 );
 
 router.get('index', '/', index);
@@ -149,9 +146,9 @@ router.get('login', '/login', login);
 secureRouter.get('dashboard', '/admin/dashboard', dashboard);
 
 router.post('/login', authorize);
-secureRouter.post('logoff', '/logoff', logoff);
+secureRouter.post('logout', '/logout', logoff);
 
-require('./routes/notes')({router, secureRouter, render});
+require('./routes/notes')({router, secureRouter});
 
 app.use(router.routes());
 app.use(secureRouter.routes());

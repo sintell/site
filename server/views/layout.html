@@ -39,12 +39,48 @@
 </head>
 <body>
     <div class="layout">
-        <div class="header">
-            <span class="header__title">
-                <span class="input-like">
-                    <a href="/"><span class="input-like__text input-like__text_separator">a.aleks</span></a><h1 class="input-like__text input-like__text_secondary input-like__text_unimportant">{% block content-title %}A site, a blog and something more{% endblock %}</h1>
+        <div class="header App-Header">
+            <div>
+                <span class="header__title">
+                    <span class="input-like">
+                        <a href="/"><span class="input-like__text input-like__text_separator">a.aleks</span></a><h1 class="input-like__text input-like__text_secondary input-like__text_unimportant">{% block content-title %}A site, a blog and something more{% endblock %}</h1>
+                    </span>
                 </span>
-            </span>
+                {% include "./menu/menu.html" %}
+            </div>
+            <div class="user-info App-UserInfo">
+                {% if user %}
+                <div class="info-row">
+                    <span class="info info__username">username:</span><span class="info info__value">{{ user.username }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info info__email">email:</span><span class="info info__value">{{ user.email }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info info__value"><form action="/logout" method="POST" class="App-LogoutForm"><button class="form__element form__element_button" type="submit">logout</button><input type="hidden" value="{{ csrf }}" name="_csrf"></form></span>
+                </div>
+                {% else %}
+                <div class="info-row">
+                    <span class="info info__value">
+                        <form action="/login" method="POST" class="App-LoginForm">
+                            <input type="text"
+                                   class="form__element form__element_input"
+                                   placeholder="login"
+                                   name="username"
+                                   value="{{ flash.oldForm.login }}"
+                                   size="10">
+                            <input type="password"
+                                   class="form__element form__element_input"
+                                   placeholder="password"
+                                   name="password"
+                                   size="10">
+                            <button type="submit" class="form__element form__element_button">login</button>
+                            <input type="hidden" value="{{ csrf }}" name="_csrf">
+                        </form>
+                    </span>
+                </div>
+                {% endif %}
+            </div>
         </div>
 
         {% block content %}

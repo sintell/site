@@ -20,6 +20,7 @@
                        placeholder="Note title"
                        value="{{ note.title }}">
                 <textarea class="form__element form__element_textarea" name="text" id="" cols="30" rows="10">{{ note.raw }}</textarea>
+                <label class="form__element form__element_settings">Show at main page <input type="checkbox" name="atMainPage" value="true" {% if note.at_main_page %}checked="checked"{% endif %}></label>
                 <button class="form__element form__element_button" type="submit">update</button>
                 <input type="hidden" name="_csrf" value="{{ csrf }}">
             </form>

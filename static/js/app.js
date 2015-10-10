@@ -27,6 +27,9 @@ var App = function() {
         }
     });
 
+    $('body').on('app.login-success', function() {console.log('login')});
+    $('body').on('app.logout-success', function() {console.log('logout')});
+
 };
 
 module.exports = new App();

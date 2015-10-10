@@ -6,11 +6,12 @@
 {% block content %}
     <div class="dashboard">
         <h1>\{a\}.Dashboard</h1>
-        <p>Logged in as {{ user.login }}</p>
+        <p>Logged in as {{ user.username }}</p>
         {% if user %}
-            <form action="/logoff" method="POST">
+            <form action="/logout" method="POST">
                 <div class="login-form__buttons">
                     <input type="submit" class="form-button" value="logout"></input>
+                    <input type="hidden" name="_csrf" value="{{ csrf }}">
                 </div>
             </form>
         {% endif %}

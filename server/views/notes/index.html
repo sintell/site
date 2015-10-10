@@ -27,6 +27,7 @@
                 <input type="text" name="title" class="form__element form__element_input" placeholder="Note title">
                 <textarea class="form__element form__element_textarea" name="text" id="" cols="30" rows="10"></textarea>
                 <input type="hidden" name="_csrf" value="{{ csrf }}">
+                <label class="form__element form__element_settings">Show at main page <input type="checkbox" name="atMainPage" value="true"></label>
                 <button class="form__element form__element_button" type="submit">create</button>
             </form>
         </div>

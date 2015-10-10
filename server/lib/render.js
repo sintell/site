@@ -8,9 +8,23 @@
 
 var views = require('co-views');
 
-// setup views mapping .html
-// to the swig template engine
+var Renderer = function(options) {
+    // setup views mapping .html
+    // to the swig template engine
 
-module.exports = views(__dirname + '/../views', {
-    map: {html: 'swig'}
-});
+    var render = views(__dirname + '/../views', {
+        map: {html: 'swig'}
+    });
+
+    return function(name, data) {
+        return render(name, Object.assign({}, data, options.proxy));
+    };
+};
+
+module.exports = function(options) {
+    // inject common params into render call
+    return function *renderInject(next) {
+        this.render = new Renderer({proxy: {user: this.passport.user, flash: this.flash, csrf: this.csrf}});
+        yield next;
+    };
+};

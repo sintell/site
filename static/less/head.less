@@ -1,5 +1,8 @@
 .header {
-    height: 58px;
+    height: 79px;
+    min-height: 79px;
+    box-sizing: border-box;
+
     -webkit-user-select: none;
     -moz-user-select: none;
     -o-user-select: none;
@@ -7,19 +10,111 @@
     user-select: none;
     cursor: default;
     z-index: 1;
-    text-align: center;
     margin-bottom: 10px;
+    overflow: hidden;
 
     font-family: 'Delius Swash Caps', sans-serif;
 
+    background-color: #134;
+    padding: 10px;
+    box-shadow: inset 0px -2px 8px #012;
+
     &__title {
-        margin: 0 auto;
         font-size: 26px;
         font-weight: 100;
         display: inline-block;
 
-        @media @breakpoint-xs {
+        @media @breakpoint-s, @breakpoint-xs {
             width: 100%;
+            text-align: center;
+            font-size: 6em;
         }
     }
+
+    &_expanded {
+        height: 260px;
+        min-height: 260px;
+    }
+
+    transition: height .25s ease-in-out, min-height .25s ease-in-out;
+
+    @media @breakpoint-s, @breakpoint-xs {
+        height: auto;
+        width: 100%;
+    }
+}
+
+.menu {
+    float: right;
+    position: relative;
+    display: inline-block;
+    font-size: 32px;
+    color: #fff;
+    font-weight: 100;
+    padding: 12px;
+    box-sizing: border-box;
+
+    .icon {
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid transparent;
+        border-radius: 2px;
+
+        &:hover {
+            border: 1px solid #fff;
+        }
+
+        &_pressed, &:active {
+            color: #134;
+            background-color: #fff;
+            border: 1px solid #fff;
+            box-shadow: -4px -6px 8px #123;
+            z-index: 1;
+            position: relative;
+        }
+    }
+
+    @media @breakpoint-s, @breakpoint-xs {
+        float: none;
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+        font-size: 6em;
+        margin-top: 35px;
+    }
+}
+
+.user-info {
+    color: #333;
+    background-color: #fff;
+    margin-right: 22px;
+    margin-top: -2px;
+    margin-left: 8px;
+    // display: none;
+
+    position: absolute;
+    right: 0;
+    max-height: 0px;
+    overflow: hidden;
+
+    border-radius: 2px 0 2px 2px;
+    box-shadow: -4px -6px 8px #123;
+    z-index: 0;
+    transition: max-height .15s ease-out, padding 0.15s ease-out;
+
+    &_expanded {
+        padding: 15px;
+        transition: max-height .45s ease-out , padding 0.15s ease-in;
+        max-height: 200px;
+        display: block;
+    }
+}
+
+.info-row {
+    display: table-row;
+}
+
+.info {
+    display: table-cell;
+    padding: 5px;
 }
